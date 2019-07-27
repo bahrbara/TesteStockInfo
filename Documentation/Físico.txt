@@ -1,0 +1,63 @@
+CREATE TABLE Client (
+    Id_Client INTEGER PRIMARY KEY,
+    Name VARCHAR,
+    CPF VARCHAR,
+    Gender CHAR,
+    Age INTEGER,
+    Birth_date DATE,
+    Email VARCHAR,
+    Phone_number VARCHAR,
+    Adress VARCHAR,
+    UNIQUE (Id_Client, CPF)
+);
+
+CREATE TABLE Account (
+    id_Account INTEGER PRIMARY KEY UNIQUE,
+    Balance FLOAT,
+    Type CHAR,
+    Id_Client INTEGER
+);
+
+CREATE TABLE Withdraw (
+    id_Withdraw INTEGER PRIMARY KEY UNIQUE,
+    Value FLOAT,
+    Date DATE,
+    Id_Client INTEGER
+);
+
+CREATE TABLE Deposit (
+    id_Deposit INTEGER PRIMARY KEY UNIQUE,
+    Value FLOAT,
+    Date DATE,
+    Id_Client INTEGER
+);
+
+CREATE TABLE Operation (
+	id_Account INTEGER,
+	id_Withdraw INTEGER,
+	id_Deposit INTEGER  
+);
+ 
+ALTER TABLE Account ADD CONSTRAINT FK_Account
+    FOREIGN KEY (Id_Client)
+    REFERENCES Client (Id_Client);
+ 
+ALTER TABLE Withdraw ADD CONSTRAINT FK_Withdraw
+    FOREIGN KEY (Id_Client)
+    REFERENCES Client (Id_Client);
+ 
+ALTER TABLE Deposit ADD CONSTRAINT FK_Deposit
+    FOREIGN KEY (Id_Client)
+    REFERENCES Client (Id_Client);
+ 
+ALTER TABLE Operation ADD CONSTRAINT FK_Operation_0
+    FOREIGN KEY (id_Withdraw)
+    REFERENCES Withdraw (id_Withdraw);
+ 
+ALTER TABLE Operation ADD CONSTRAINT FK_Operation_1
+    FOREIGN KEY (id_Deposit)
+    REFERENCES Deposit (id_Deposit);
+ 
+ALTER TABLE Operation ADD CONSTRAINT FK_Operation_2
+    FOREIGN KEY (id_Account)
+    REFERENCES Account (id_Account);
