@@ -3,6 +3,7 @@ package com.testestockinfo.teste;
 import java.util.Date;
 
 public class Client {
+    private int idClient;
     private String name;
     private String cpf;
     private String gender;
@@ -13,8 +14,20 @@ public class Client {
     private String address;
 
 
+    public int getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(int idClient) {
+        this.idClient = idClient;
+    }
+
     public String getCpf() {
         return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public String getName() {
@@ -35,6 +48,10 @@ public class Client {
 
     public int getAge() {
          return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public Date getBirthDate() {
@@ -69,8 +86,18 @@ public class Client {
         this.address = address;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    @Override
+    public String toString() {
+        return "Client{" +
+                "idClient=" + idClient +
+                ", name='" + name + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", gender='" + gender + '\'' +
+                ", age=" + age +
+                ", birthDate=" + birthDate +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", address='" + address + '\'' +
+                '}';
     }
-
 }
