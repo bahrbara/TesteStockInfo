@@ -4,7 +4,12 @@ public class Account {
 
     private int idAccount;
     private Float value;
-    private String type;
+    private char type;
+
+    public Account(char type) {
+        this.value = 0.0f;
+        this.type = type;
+    }
 
     public int getIdAccount() {
         return idAccount;
@@ -22,11 +27,11 @@ public class Account {
         this.value = value;
     }
 
-    public String getType() {
+    public char getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(char type) {
         this.type = type;
     }
 

@@ -14,17 +14,17 @@ public class ClientController {
     @RequestMapping(method = RequestMethod.POST)
     public Map<Integer, Client> create(@RequestBody Client request) {
 
-        Client cliente = new Client();
-
-        cliente.setIdClient(request.getIdClient());
-        cliente.setName(request.getName());
-        cliente.setCpf(request.getCpf());
-        cliente.setGender(request.getGender());
-        cliente.setAge(request.getAge());
-        cliente.setBirthDate(request.getBirthDate());
-        cliente.setEmail(request.getEmail());
-        cliente.setPhoneNumber(request.getPhoneNumber());
-        cliente.setAddress(request.getAddress());
+        Client cliente = new Client(
+                request.getIdClient(),
+                request.getName(),
+                request.getCpf(),
+                request.getGender(),
+                request.getAge(),
+                request.getBirthDate(),
+                request.getEmail(),
+                request.getPhoneNumber(),
+                request.getAddress()
+                );
 
         System.out.println(cliente.toString());
 

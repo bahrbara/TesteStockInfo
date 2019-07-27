@@ -1,17 +1,39 @@
 package com.testestockinfo.teste;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Client {
     private int idClient;
     private String name;
     private String cpf;
-    private String gender;
+    private char gender;
     private int age;
     private Date birthDate;
     private String email;
     private String phoneNumber;
     private String address;
+    private ArrayList<Account> accountList;
+
+    public Client(int idClient, String name, String cpf, char gender, int age, Date birthDate,
+                  String email, String phoneNumber, String address) {
+
+        this.accountList = new ArrayList<>();
+        Account accountNormal = new Account('N');
+        Account accountEventual = new Account('E');
+
+        this.idClient = idClient;
+        this.name = name;
+        this.cpf = cpf;
+        this.gender = gender;
+        this.age = age;
+        this.birthDate = birthDate;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.accountList.add(accountNormal);
+        this.accountList.add(accountEventual);
+    }
 
 
     public int getIdClient() {
@@ -38,11 +60,11 @@ public class Client {
         this.name = name;
     }
 
-    public String getGender() {
+    public char getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(char gender) {
         this.gender = gender;
     }
 
@@ -86,6 +108,14 @@ public class Client {
         this.address = address;
     }
 
+    public ArrayList<Account> getAccountList() {
+        return accountList;
+    }
+
+    public void setAccountList(ArrayList<Account> accountList) {
+        this.accountList = accountList;
+    }
+
     @Override
     public String toString() {
         return "Client{" +
@@ -98,6 +128,7 @@ public class Client {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
+                ", accountList=" + accountList +
                 '}';
     }
 }
