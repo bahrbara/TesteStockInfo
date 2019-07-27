@@ -1,21 +1,27 @@
 package com.testestockinfo.teste;
 
+import java.util.ArrayList;
+
 public class Account {
 
     private int idAccount;
     private Float value;
     private char type;
+    private ArrayList<Withdraw> withdrawList;
+    private ArrayList<Deposit> depositList;
 
     public Account(char type) {
         this.value = 0.0f;
         this.type = type;
+        this.depositList = new ArrayList<>();
+        this.withdrawList = new ArrayList<>();
     }
 
     public int getIdAccount() {
         return idAccount;
     }
 
-    public void setIdAccount(int idAccount) {
+    void setIdAccount(int idAccount) {
         this.idAccount = idAccount;
     }
 
@@ -23,7 +29,7 @@ public class Account {
         return value;
     }
 
-    public void setValue(float value) {
+    private void setValue(Float value) {
         this.value = value;
     }
 
@@ -35,12 +41,43 @@ public class Account {
         this.type = type;
     }
 
+    public ArrayList<Withdraw> getWithdrawList() {
+        return withdrawList;
+    }
+
+    public void setWithdrawList(ArrayList<Withdraw> withdrawList) {
+        this.withdrawList = withdrawList;
+    }
+
+    public ArrayList<Deposit> getDepositList() {
+        return depositList;
+    }
+
+    public void setDepositList(ArrayList<Deposit> depositList) {
+        this.depositList = depositList;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
                 "idAccount=" + idAccount +
                 ", value=" + value +
-                ", type='" + type + '\'' +
+                ", type=" + type +
+                ", withdrawList=" + withdrawList +
+                ", depositList=" + depositList +
                 '}';
+    }
+
+    public Float deposit(Float depositValue) throws Exception {
+        Deposit.validateDeposit(depositValue);
+        this.setValue(this.getValue() + depositValue);
+        this.addDeposit(depositValue);
+        return this.getValue();
+    }
+
+    public void addDeposit(Float depositValue) {
+        Deposit deposit = new Deposit();
+        deposit.setValue(depositValue);
+        this.getDepositList().add(deposit);
     }
 }

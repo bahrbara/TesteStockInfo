@@ -6,7 +6,7 @@ public class Deposit {
 
     private int idDeposit;
     private Float value;
-    private Date data;
+    private Date date;
 
     public int getIdDeposit() {
         return idDeposit;
@@ -24,12 +24,12 @@ public class Deposit {
         this.value = value;
     }
 
-    public Date getData() {
-        return data;
+    public Date getDate() {
+        return date;
     }
 
-    public void setData(Date data) {
-        this.data = data;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     @Override
@@ -37,7 +37,13 @@ public class Deposit {
         return "Deposit{" +
                 "idDeposit=" + idDeposit +
                 ", value=" + value +
-                ", data=" + data +
+                ", data=" + date +
                 '}';
+    }
+
+    public static void validateDeposit(Float depositValue) throws Exception {
+        if (depositValue < 0) {
+            throw new Exception("Valor inválido");
+        }
     }
 }
