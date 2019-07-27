@@ -7,7 +7,7 @@ CREATE TABLE Client (
     Birth_date DATE,
     Email VARCHAR,
     Phone_number VARCHAR,
-    Adress VARCHAR,
+    Address VARCHAR,
     UNIQUE (Id_Client, CPF)
 );
 
