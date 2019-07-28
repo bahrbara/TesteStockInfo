@@ -26,12 +26,19 @@ public class OperationController {
     }
 
     @RequestMapping(value = "/deposito/{id}", method = RequestMethod.POST)
-    public Account create(@PathVariable("id") int idAccount, @RequestBody Deposit request) throws Exception {
-        Account contaDeposito = listaContas.get(idAccount);
-        contaDeposito.deposit(request.getValue());
-        return contaDeposito;
+    public Account deposit(@PathVariable("id") int idAccount, @RequestBody Deposit request) throws Exception {
+        Account accountDeposit = listaContas.get(idAccount);
+        accountDeposit.deposit(request.getValue());
+        return accountDeposit;
     }
-    
+
+    @RequestMapping(value = "/saque/{id}", method = RequestMethod.POST)
+    public Account withdraw(@PathVariable("id") int idAccount, @RequestBody Withdraw request) throws Exception {
+        Account accountWithdraw = listaContas.get(idAccount);
+        accountWithdraw.withdraw(request.getValue());
+        return accountWithdraw;
+    }
+
 //
 //    @RequestMapping("/{id}")
 //    public Client getById(@PathVariable("id") int idClient){

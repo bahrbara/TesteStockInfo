@@ -43,7 +43,7 @@ public class Deposit {
 
     public static void validateDeposit(Float depositValue) throws Exception {
         if (depositValue < 0) {
-            throw new Exception("Valor inválido");
+            throw new Exception("Valor de depósito negativo");
         }
     }
 }

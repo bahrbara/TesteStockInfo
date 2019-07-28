@@ -75,9 +75,22 @@ public class Account {
         return this.getValue();
     }
 
+    public Float withdraw(Float withdrawValue) throws Exception {
+        Withdraw.validateWithdraw(withdrawValue, this);
+        this.setValue(this.getValue() - withdrawValue);
+        this.addWithdraw(withdrawValue);
+        return this.getValue();
+    }
+
     public void addDeposit(Float depositValue) {
         Deposit deposit = new Deposit();
         deposit.setValue(depositValue);
         this.getDepositList().add(deposit);
+    }
+
+    public void addWithdraw(Float withdrawValue) {
+        Withdraw withdraw = new Withdraw();
+        withdraw.setValue(withdrawValue);
+        this.getWithdrawList().add(withdraw);
     }
 }

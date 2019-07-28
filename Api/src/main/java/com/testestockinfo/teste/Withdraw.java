@@ -40,4 +40,21 @@ public class Withdraw {
                 ", data=" + data +
                 '}';
     }
+
+    public static void validateWithdraw(Float withdrawValue, Account account) throws Exception {
+        isNegative(withdrawValue);
+        hasEnoughBalance(withdrawValue, account.getValue());
+    }
+
+    private static void isNegative(Float value) throws Exception {
+        if (value < 0) {
+            throw new Exception("Valor de saque negativo");
+        }
+    }
+
+    private static void hasEnoughBalance(Float withdrawValue, Float accountValue) throws Exception {
+        if (accountValue < withdrawValue) {
+            throw new Exception("Saldo insuficiente");
+        }
+    }
 }
