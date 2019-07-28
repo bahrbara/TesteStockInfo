@@ -1,12 +1,24 @@
 package com.testestockinfo.teste;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "withdraw")
 public class Withdraw {
-
+    @Id
+    @GeneratedValue
     private int idWithdraw;
+
     private Float value;
     private Date data;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "id_account", nullable = false)
+    private Account account;
 
     public int getIdWithdraw() {
         return idWithdraw;

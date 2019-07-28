@@ -1,14 +1,33 @@
 package com.testestockinfo.teste;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "account")
 public class Account {
 
+    @Id @GeneratedValue
     private int idAccount;
     private Float value;
     private char type;
-    private ArrayList<Withdraw> withdrawList;
-    private ArrayList<Deposit> depositList;
+
+    @JsonManagedReference
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="account", cascade=CascadeType.PERSIST)
+    private List<Withdraw> withdrawList;
+
+    @JsonManagedReference
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="account", cascade=CascadeType.PERSIST)
+    private List<Deposit> depositList;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "id_client", nullable = false)
+    private Client client;
 
     public Account(char type) {
         this.value = 0.0f;
@@ -41,7 +60,7 @@ public class Account {
         this.type = type;
     }
 
-    public ArrayList<Withdraw> getWithdrawList() {
+    public List<Withdraw> getWithdrawList() {
         return withdrawList;
     }
 
@@ -49,12 +68,20 @@ public class Account {
         this.withdrawList = withdrawList;
     }
 
-    public ArrayList<Deposit> getDepositList() {
+    public List<Deposit> getDepositList() {
         return depositList;
     }
 
     public void setDepositList(ArrayList<Deposit> depositList) {
         this.depositList = depositList;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     @Override

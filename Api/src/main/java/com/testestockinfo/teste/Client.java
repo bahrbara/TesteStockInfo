@@ -1,9 +1,18 @@
 package com.testestockinfo.teste;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+
+@Entity
+@Table(name = "client")
 public class Client {
+
+    @Id @GeneratedValue
     private int idClient;
     private String name;
     private String cpf;
@@ -13,16 +22,15 @@ public class Client {
     private String email;
     private String phoneNumber;
     private String address;
-    private ArrayList<Account> accountList;
 
-    public Client(int idClient, String name, String cpf, char gender, int age, Date birthDate,
+    @JsonManagedReference
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="client", cascade=CascadeType.PERSIST)
+    private List<Account> accountList;
+
+    public Client(String name, String cpf, char gender, int age, Date birthDate,
                   String email, String phoneNumber, String address) {
 
         this.accountList = new ArrayList<>();
-        Account accountNormal = new Account('N');
-        Account accountEventual = new Account('E');
-
-        this.idClient = idClient;
         this.name = name;
         this.cpf = cpf;
         this.gender = gender;
@@ -31,8 +39,6 @@ public class Client {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.accountList.add(accountNormal);
-        this.accountList.add(accountEventual);
     }
 
 
@@ -108,11 +114,11 @@ public class Client {
         this.address = address;
     }
 
-    public ArrayList<Account> getAccountList() {
+    public List<Account> getAccountList() {
         return accountList;
     }
 
-    public void setAccountList(ArrayList<Account> accountList) {
+    public void setAccountList(List<Account> accountList) {
         this.accountList = accountList;
     }
 

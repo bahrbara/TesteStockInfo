@@ -1,5 +1,6 @@
 package com.testestockinfo.teste;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -9,13 +10,15 @@ import java.util.Map;
 @RequestMapping("/cliente")
 public class ClientController {
 
+    @Autowired
+    private ClientRepository clientRepository;
+
     private Map<Integer, Client> listaCliente = new HashMap<>();
 
     @RequestMapping(method = RequestMethod.POST)
-    public Map<Integer, Client> create(@RequestBody Client request) {
+    public Client create(@RequestBody Client request) {
 
-        Client cliente = new Client(
-                request.getIdClient(),
+        Client client = new Client(
                 request.getName(),
                 request.getCpf(),
                 request.getGender(),
@@ -26,11 +29,16 @@ public class ClientController {
                 request.getAddress()
                 );
 
-        System.out.println(cliente.toString());
+        Account accountNormal = new Account('N');
+        accountNormal.setClient(client);
 
-        listaCliente.put(cliente.getIdClient(), cliente);
+        Account accountEventual = new Account('E');
+        accountEventual.setClient(client);
 
-        return listaCliente;
+        client.getAccountList().add(accountNormal);
+        client.getAccountList().add(accountEventual);
+
+        return clientRepository.save(client);
     }
 
     @RequestMapping(method = RequestMethod.GET)
