@@ -66,10 +66,6 @@ public class Client {
         this.gender = gender;
     }
 
-    public int getAge() {
-         return 0;
-    }
-
     public Date getBirthDate() {
         return birthDate;
     }

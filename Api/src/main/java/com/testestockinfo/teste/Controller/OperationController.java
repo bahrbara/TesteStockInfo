@@ -19,6 +19,7 @@ public class OperationController {
     @Autowired
     private AccountRepository accountRepository;
 
+    //TODO remover após testes
     @RequestMapping(method = RequestMethod.GET)
     public List<Account> get() {
         return accountRepository.findAll();
