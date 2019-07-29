@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -19,10 +18,9 @@ public class OperationController {
     @Autowired
     private AccountRepository accountRepository;
 
-    //TODO remover após testes
-    @RequestMapping(method = RequestMethod.GET)
-    public List<Account> get() {
-        return accountRepository.findAll();
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public List<Account> get(@PathVariable("id") int idClient) {
+        return accountRepository.findByIdClient(idClient);
     }
 
     @RequestMapping(value = "/extrato/{id}", method = RequestMethod.GET)

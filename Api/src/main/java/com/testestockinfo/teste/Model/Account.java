@@ -14,6 +14,9 @@ public class Account {
     private Float value;
     private char type;
 
+    @Column(name = "id_client")
+    private int idClient;
+
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name = "id_account")
     private List<Deposit> depositList;
