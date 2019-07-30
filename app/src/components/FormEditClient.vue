@@ -18,8 +18,6 @@
           required
           placeholder="Apenas números"
           type="number"
-          min="11"
-          max="11"
           oninput="validity.valid||(value='');"          
         ></b-form-input>
       </b-form-group>
@@ -115,7 +113,7 @@
             <b-button @click="showWithdraw()" variant="outline-danger">Saque</b-button>
             <b-button @click="showDeposit()" variant="outline-success">Depósito</b-button>
             <b-button @click="showStatement()" variant="outline-info">Extrato</b-button>
-            <b-button @click="showModal()" variant="outline-dark">Edição</b-button>
+            <b-button @click="editClient()" variant="outline-dark">Edição</b-button>
         </div>
 
     </b-form>
@@ -218,6 +216,50 @@
         </b-form>
     </div>
 
+    <div>
+        <b-alert variant="success" :show=showSuccessEdit dismissible>Edição realizada com sucesso</b-alert>
+        <b-alert variant="danger" :show=showErrorEdit dismissible>Edição não pôde ser realizada</b-alert>        
+        <b-form @submit="onSubmit" v-if="showEdit">
+
+            <b-form-group
+                id="input-group-5"
+                label="E-mail:"
+                label-for="input-5"
+            >
+                <b-form-input
+                id="input-5"
+                v-model="clientData.email"
+                type="email"
+                required
+                placeholder="Insira e-mail"
+                ></b-form-input>
+            </b-form-group>
+
+            <b-form-group id="input-group-6" label="Telefone:" label-for="input-6">
+                <b-form-input
+                id="input-6"
+                v-model="clientData.phoneNumber"
+                required
+                placeholder="Insira número de telefone com DDD"
+                ></b-form-input>
+            </b-form-group>
+
+            <b-form-group id="input-group-7" label="Endereço:" label-for="input-7">
+                <b-form-input
+                id="input-7"
+                v-model="clientData.address"
+                required
+                placeholder="Insira endereço completo"
+                ></b-form-input>
+            </b-form-group>
+
+            <div class="btn-group">
+                <b-button @click="closeOperation" variant="outline-primary">Voltar</b-button>
+                <b-button @click="saveClient" variant="outline-success">Salvar</b-button>
+            </div>
+
+        </b-form>        
+    </div>        
 
   </div>
 </template>
@@ -249,6 +291,9 @@
         showError: false,
         showSuccessDeposit: false,
         showErrorDeposit: false,
+        showSuccessEdit: false,
+        showErrorEdit: false,        
+        showEdit: false,
         totalBalance: 0,
         clientAge: 0,
         form: {
@@ -331,15 +376,36 @@
                 this.showErrorDeposit = true
             })
       },
+      saveClient() {
+          var clientEdit = Object.assign({}, this.clientData)
+          delete clientEdit.birthDate
+          axios
+            .put(`http://localhost:8080/cliente/${clientEdit.idClient}`, clientEdit)
+            .then((response) => {
+                this.clientData = response.data
+                this.formatBirthDate()
+                this.showSuccessEdit = true
+            })
+            .catch((error) => {
+                this.showErrorEdit = true
+            })
+      },
+      editClient() {
+        this.showForm = false
+        this.showEdit = true
+      },
       closeOperation() {
           this.showForm = true
           this.showOperation= false
           this.showSuccessDeposit= false
           this.showErrorDeposit= false
           this.showOperationDeposit= false
-          showOperationStatement = false
+          this.showOperationStatement = false
           this.showSuccess = false
           this.showError = false
+          this.showEdit = false
+          this.showSuccessEdit = false
+          this.showErrorEdit = false
       }
     }
   }

@@ -5,28 +5,36 @@
             <a href="#" @click="showModal(data.item)">{{ data.item.name }}</a>
         </template>
     </b-table>
-        <b-button class="mt-3" variant="outline-primary" block @click="hideModal">Cadastrar Cliente</b-button>    
-    <b-modal ref="my-modal" hide-footer :title=currentClient.name>
+
+    <b-button class="mt-3" variant="outline-primary" block @click="showModalCreateClient">Cadastrar Cliente</b-button>
+
+    <b-modal ref="modalEditClient" hide-footer :title=currentClient.name>
         <div class="d-block text-center">
             <FormClient v-bind:clientData="currentClient"></FormClient>
         </div>
     </b-modal>
+
+    <b-modal ref="modalCreateClient" hide-footer title="Novo cliente">
+        <div class="d-block text-center">
+            <FormCreateClient></FormCreateClient>
+        </div>
+    </b-modal>    
   </div>
 </template>
 
 <script>
   import axios from 'axios';
-  import FormClient from './FormClient.vue'
+  import FormEditClient from './FormEditClient.vue'
+  import FormCreateClient from './FormCreateClient.vue'
 
   export default {
     name: 'ListClients',
     components: {
-        FormClient
+        FormEditClient,
+        FormCreateClient
     },
     mounted () {
-        axios
-            .get('http://localhost:8080/cliente')
-            .then(response => (this.items = response.data))
+        this.getClientList()
     },    
     data() {
       return {
@@ -49,13 +57,26 @@
       }
     },
     methods: {
+        getClientList() {
+            axios
+                .get('http://localhost:8080/cliente')
+                .then(response => (this.items = response.data))
+        },
         showModal(data) {
             this.currentClient = data
-            this.$refs['my-modal'].show()
+            this.$refs['modalEditClient'].show()
         },
+        showModalCreateClient(data) {
+            this.$refs['modalCreateClient'].show()
+        },        
         hideModal() {
-            this.$refs['my-modal'].hide()
-        }     
+            this.$refs['modalEditClient'].hide()
+            this.getClientList()
+        },
+        hideModalCreateClient() {
+            this.$refs['modalEditClient'].hide()
+            this.getClientList()
+        }        
     }
   }
 </script>
