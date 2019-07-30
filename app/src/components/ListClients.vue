@@ -1,10 +1,8 @@
-
-
 <template>
   <div>
     <b-table striped hover :items="items" :fields="fields">
         <template slot="name" slot-scope="data">
-            <a @click="showModal(data.item)">{{ data.item.name }}</a>
+            <a href="#" @click="showModal(data.item)">{{ data.item.name }}</a>
         </template>
     </b-table>
         <b-button class="mt-3" variant="outline-primary" block @click="hideModal">Cadastrar Cliente</b-button>    
