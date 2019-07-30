@@ -47,7 +47,8 @@
           id="input-4"
           v-model="clientData.birthDate"
           required
-          placeholder="Idade do Cliente"
+          type="datetime"
+          placeholder="Data de nascimento do Cliente"
         ></b-form-input>
       </b-form-group>
 
@@ -112,8 +113,8 @@
 
         <div class="btn-group">
             <b-button @click="showWithdraw()" variant="outline-danger">Saque</b-button>
-            <b-button @click="showModal()" variant="outline-success">Depósito</b-button>
-            <b-button @click="showModal()" variant="outline-info">Extrato</b-button>
+            <b-button @click="showDeposit()" variant="outline-success">Depósito</b-button>
+            <b-button @click="showStatement()" variant="outline-info">Extrato</b-button>
             <b-button @click="showModal()" variant="outline-dark">Edição</b-button>
         </div>
 
@@ -154,6 +155,70 @@
         </div>
         </b-form>
     </div>
+
+       <div>
+        <b-alert variant="success" :show=showSuccessDeposit dismissible>Depósito realizado com sucesso</b-alert>
+        <b-alert variant="danger" :show=showErrorDeposit dismissible>Depósito não pôde ser realizado</b-alert>
+        <b-form @submit="onSubmit" v-if="showOperationDeposit">
+        <b-form-group label="Conta:">
+            <b-form-select v-model="accountSelected" required>
+                <option :value="null" disabled>Selecione um tipo de conta</option>
+                <option v-for="option in this.clientData.accountList" :value="option">{{ accountTypes[option.type] }}</option>
+            </b-form-select>
+        </b-form-group>
+        <b-form-group
+            v-if="accountSelected !== null"
+            label="Saldo da conta:">
+            <b-form-input readonly          
+            v-model="accountSelected.value"
+            ></b-form-input>
+        </b-form-group>      
+        <b-form-group
+            v-if="accountSelected !== null"
+            label="Valor do depósito:">
+            <b-form-input
+            type="number"
+            min="0"
+            oninput="validity.valid||(value='');"
+            v-model="depositValue"
+            required
+            placeholder="Apenas números"
+            ></b-form-input>
+        </b-form-group>      
+        <div class="btn-group">
+            <b-button @click="closeOperation" variant="outline-primary">Voltar</b-button>
+            <b-button @click="makeDeposit" variant="outline-success">Depositar</b-button>
+        </div>
+        </b-form>
+    </div>
+
+    <div>
+        <b-form @submit="onSubmit" v-if="showOperationStatement">
+            <b-form-group label="Extrato por transação:">
+                <b-form-group label="Conta:">
+                    <b-form-select v-model="accountSelected" required>
+                        <option :value="null" disabled>Selecione um tipo de conta</option>
+                        <option v-for="option in this.clientData.accountList" :value="option">{{ accountTypes[option.type] }}</option>
+                    </b-form-select>
+                </b-form-group>
+            </b-form-group>
+            <b-table
+                v-if="accountSelected !== null"
+                striped
+                hover
+                :items="accountSelected.depositList.concat(accountSelected.withdrawList)"
+                :fields="statementsTable.fields">
+                <template slot="date" slot-scope="data">
+                    {{ data.item.date | formatBrDate }}
+                </template>
+            </b-table>
+            <div class="btn-group">
+                <b-button @click="closeOperation" variant="outline-primary">Voltar</b-button>
+            </div>
+        </b-form>
+    </div>
+
+
   </div>
 </template>
 
@@ -165,15 +230,25 @@
         clientData: {}
     },
     mounted () {
-    this.totalBalance = this.clientData.accountList[0].value + this.clientData.accountList[1].value
-    this.calculateAge();
+        this.totalBalance = this.clientData.accountList[0].value + this.clientData.accountList[1].value
+        this.calculateAge()
+        this.formatBirthDate()
+    },
+    filters: {
+        formatBrDate: function(value) {
+            return new Date(value).toLocaleDateString(); 
+        }
     },
     data() {
       return {
-        showForm: false,
-        showOperation: true,
+        showForm: true,
+        showOperationStatement: false,
+        showOperationDeposit: false,
+        showOperation: false,
         showSuccess: false,
         showError: false,
+        showSuccessDeposit: false,
+        showErrorDeposit: false,
         totalBalance: 0,
         clientAge: 0,
         form: {
@@ -189,7 +264,23 @@
         genders: [{ text: 'Feminino', value: 'F' }, { text: 'Masculino', value: 'M' }],
         accountSelected: null,
         accountTypes: {'N': 'Normal', 'E': 'Eventual'},
-        withdrawValue: 0
+        withdrawValue: 0,
+        depositValue: 0,
+        statementsTable: {
+            fields: {
+                date: {
+                    label: 'Data',
+                    sortable: true
+                },
+                value: {
+                    label: 'Valor'
+                }, 
+                type: {
+                    label: 'Tipo',
+                    sortable: true
+                }                
+            }
+        }
       }
     },
     methods: {
@@ -203,9 +294,20 @@
         var ageDate = new Date(ageDifMs); // miliseconds from epoch
         this.clientAge = Math.abs(ageDate.getUTCFullYear() - 1970);
       },
+      formatBirthDate() {
+          this.clientData.birthDate = new Date(this.clientData.birthDate).toLocaleDateString()
+      },
       showWithdraw() {
           this.showForm = false
           this.showOperation = true
+      },
+      showDeposit() {
+          this.showForm = false
+          this.showOperationDeposit = true
+      },
+      showStatement() {
+          this.showForm = false
+          this.showOperationStatement = true
       },
       makeWithdraw() {
         axios
@@ -218,9 +320,24 @@
                 this.showError = true
             })
       },
+       makeDeposit() {
+        axios
+            .post(`http://localhost:8080/operacao/deposito/${this.accountSelected.idAccount}`, { value: this.depositValue })
+            .then((response) => {
+                this.accountSelected.value = response.data.value
+                this.showSuccessDeposit = true
+            })
+            .catch((error) => {
+                this.showErrorDeposit = true
+            })
+      },
       closeOperation() {
           this.showForm = true
           this.showOperation= false
+          this.showSuccessDeposit= false
+          this.showErrorDeposit= false
+          this.showOperationDeposit= false
+          showOperationStatement = false
           this.showSuccess = false
           this.showError = false
       }

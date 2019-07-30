@@ -24,7 +24,7 @@ public class Withdraw extends Operation {
     }
 
     public Withdraw() {
-        this.setType("WITHDRAW");
+        this.setType("SAQUE");
     }
 
     public Date getDate() {

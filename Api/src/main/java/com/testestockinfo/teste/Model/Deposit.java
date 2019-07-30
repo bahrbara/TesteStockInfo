@@ -20,7 +20,7 @@ public class Deposit extends Operation {
     private Date date;
 
     public Deposit() {
-        this.setType("DEPOSIT");
+        this.setType("DEPÓSITO");
     }
 
     public int getIdDeposit() {
